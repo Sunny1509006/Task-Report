@@ -20,11 +20,11 @@ async def add_event(task: TaskCreate):
     event = {
     'summary': task.task_name,
     'start': {
-        'dateTime': '2025-05-30T18:43:00',
+        'dateTime': task.start_time.isoformat(),
         'timeZone': 'Asia/Dhaka',
     },
     'end': {
-        'dateTime': '2025-05-30T19:53:00',
+        'dateTime': task.end_time.isoformat(),
         'timeZone': 'Asia/Dhaka',
     },
 }
