@@ -1,13 +1,17 @@
 from fastapi import FastAPI
 from app.routes import task_routes, user_routes
 from app.services.scheduler import start_scheduler
+from app.routes import report_routes  # Add this import for report APIs
 from fastapi.openapi.utils import get_openapi
 
 app = FastAPI()
 
-# Register your routers
+# Register your existing routers
 app.include_router(task_routes.router)
 app.include_router(user_routes.router)
+
+# Register the report router
+app.include_router(report_routes.router, prefix="/api")  # prefix optional, but recommended
 
 # Custom OpenAPI for Swagger Bearer Auth support
 def custom_openapi():
@@ -33,3 +37,8 @@ def custom_openapi():
     return app.openapi_schema
 
 app.openapi = custom_openapi
+
+# Start scheduler on app startup event
+@app.on_event("startup")
+async def startup_event():
+    start_scheduler()

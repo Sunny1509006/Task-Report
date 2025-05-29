@@ -3,10 +3,12 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import HTMLResponse
 from app.schemas.task_schema import TaskCreate, TaskFeedback
 from app.crud import task_crud
-from app.services import google_calendar, report_service
+from app.services import google_calendar
 from app.dependencies import get_current_user
 from fastapi import Query
 from typing import Optional
+
+from app.utils import reports
 
 router = APIRouter()
 
@@ -32,7 +34,7 @@ async def add_feedback(feedback: TaskFeedback):
 
 @router.get("/report", response_class=HTMLResponse)
 async def get_report(current_user: dict = Depends(get_current_user)):
-    return await report_service.generate_weekly_report(current_user["sub"])
+    return await reports.generate_weekly_report(current_user["sub"])
 
 @router.post("/tasks/rollover")
 async def rollover_tasks(current_user: dict = Depends(get_current_user)):
