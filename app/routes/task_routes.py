@@ -1,5 +1,5 @@
 # app/routes/task_routes.py
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import HTMLResponse
 from app.schemas.task_schema import TaskCreate, TaskFeedback
 from app.crud import task_crud
@@ -15,7 +15,10 @@ async def add_task(task: TaskCreate, current_user: dict = Depends(get_current_us
 
 @router.post("/feedback")
 async def add_feedback(feedback: TaskFeedback):
-    return await task_crud.update_feedback(feedback.task_id, feedback)
+    update_result = await task_crud.update_feedback(feedback.task_id, feedback)
+    if update_result["matched_count"] == 0:
+        raise HTTPException(status_code=404, detail="Task not found")
+    return update_result
 
 @router.get("/report", response_class=HTMLResponse)
 async def get_report(current_user: dict = Depends(get_current_user)):

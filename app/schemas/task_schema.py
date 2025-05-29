@@ -9,5 +9,5 @@ class TaskCreate(BaseModel):
 
 class TaskFeedback(BaseModel):
     task_id: str
-    completion_percentage: int
+    completion_percentage: float
     feedback: str
