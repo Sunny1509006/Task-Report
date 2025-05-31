@@ -70,3 +70,9 @@ async def manual_rollover(task_id: str, payload: ManualRolloverRequest, current_
         raise HTTPException(status_code=404, detail="Task not found")
     return result
 
+@router.get("/task-list")
+async def get_tasks(current_user: dict = Depends(get_current_user)):
+    tasks = await task_crud.get_tasks_by_user(current_user["sub"])
+    for task in tasks:
+        task["_id"] = str(task["_id"])  # Convert ObjectId to string
+    return tasks

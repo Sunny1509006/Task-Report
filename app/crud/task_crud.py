@@ -50,7 +50,7 @@ async def create_task(user_id, task_data):
 
 
 async def get_tasks_by_user(user_id):
-    return await task_collection.find({"user_id": user_id}).to_list(1000)
+    return await task_collection.find({"user_id": user_id}).sort("_id", -1).to_list(1000)
 
 
 async def update_feedback(task_id, feedback_data):

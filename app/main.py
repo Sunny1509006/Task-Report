@@ -3,9 +3,24 @@ from app.routes import task_routes, user_routes
 from app.services.scheduler import start_scheduler
 from app.routes import report_routes  # Add this import for report APIs
 from fastapi.openapi.utils import get_openapi
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+# List the frontend origins you want to allow
+origins = [
+    "http://localhost:3000",  # your React dev server
+    "http://127.0.0.1:3000",
+    # add your deployed frontend URLs here as well
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # or ["*"] to allow all origins (not recommended for production)
+    allow_credentials=True,
+    allow_methods=["*"],  # GET, POST, PUT, DELETE etc.
+    allow_headers=["*"],
+)
 # Register your existing routers
 app.include_router(task_routes.router)
 app.include_router(user_routes.router)
